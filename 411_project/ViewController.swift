@@ -7,15 +7,11 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, DetailViewControllerDelegate {
-    func doSomethingWith(data: [String]) {
-        detailArray = data
-    }
-    
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet var titleLabel: UILabel!
-    var detailArray = [String]()
-    var tempIndex:Int = 0
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return stringArray.count
         
@@ -27,7 +23,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell.textLabel?.text = txt
         return cell
     }
-    //let detailVC = UIStoryboard(name: "", bundle: <#T##Bundle?#>)
     
     @IBAction func addAction(_ sender: UIButton) {
         if (sender.titleLabel?.text == "ADD") {
@@ -38,26 +33,20 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             AddText.isUserInteractionEnabled = false
             if let c = AddText.text {
                 stringArray.append(c)
-                detailArray.append("")
             }
             AddText.text = ""
             tblView.reloadData()
             
         }
     }
-    //let masterVC = self.splitViewController?.viewControllers.description
     //run when tableview tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //tap to navigate to detailed view
-        tempIndex = indexPath.row
-        //detailArray = vc!.detailArray_detailView
-        print(tempIndex)
-        self.performSegue(withIdentifier: "MainVCToDetailVC", sender: self)
+        let vc = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as? DetailViewController
         
-        
+        self.navigationController?.pushViewController(vc!, animated: true)
         print("You tapped cell number \(indexPath.row).")
-        //detailArray[indexPath.row] = vc?.name ?? "Something"
-        //print (detailArray)
+        
     }
     //row deletion
     func tableView(_ tableView: UITableView,commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -69,6 +58,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
     }
     
+    
+    //@IBAction func delAction(_ sender: UIButton) {
+        //tblView.isEditing = true
+        
+   // }
     @IBOutlet var AddText: UITextField!
     @IBOutlet var tblView: UITableView!
     var stringArray = [String]()
@@ -78,27 +72,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        //let DetailVC = DetailViewController()
-        //if(DetailVC.detailArray_detailView.isEmpty){
-        //detailArray = DetailVC.detailArray_detailView
-        print("View did load for ViewController")
-        print(detailArray)
-        print("What happens next...?")
-            //detailArray = DetailVC.detailArray_detailView
-        
         AddText.isUserInteractionEnabled = false
         tblView.dataSource = self
         tblView.delegate = self
         titleLabel.text = "To-Do List"
+        
     }
-    
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if(segue.identifier == "MainVCToDetailVC"){
-            let detailVC = segue.destination as! DetailViewController
-            detailVC.delegate = self
-        }
-    }
+
+
 
 }
 
